@@ -11,6 +11,9 @@ const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 const AnimalCard = require('./src/components/AnimalCard').default; //
 
+const dotenv = require('dotenv');
+dotenv.config(); // see more details: https://medium.com/@zak786khan/env-variables-undefined-78cf218dae87
+
 // make sure the 'public/uploaded-photos exist' when the app fist load
 fse.ensureDirSync(path.join('public', 'uploaded-photos')); // to avoid naming difference (e.g. windows use back slash '\')
 
@@ -163,11 +166,9 @@ function cleanup(req, res, next) {
 }
 
 async function start() {
-	const client = new MongoClient(
-		'mongodb://root:root@localhost:27017/AmazingMernApp?&authSource=admin'
-	);
+	const client = new MongoClient(process.env.ATLAS_URI);
 	await client.connect();
-	db = client.db();
+	db = client.db('AmazingMernApp');
 }
 start();
 
