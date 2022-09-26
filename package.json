@@ -4,9 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "dev": "run-p ourserver build",
-    "build": "webpack --watch",
-    "ourserver": "nodemon server-compiled",
+    "dev": "run-p build server",
+    "build": "webpack",
+    "server": "nodemon server-compiled",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
