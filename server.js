@@ -167,7 +167,9 @@ function cleanup(req, res, next) {
 }
 
 async function start() {
-	const client = new MongoClient(process.env.ATLAS_URI);
+	const client = new MongoClient(
+		'mongodb+srv://sbshaun:uploadwhatever@cluster0.j1hvyix.mongodb.net/?retryWrites=true&w=majority'
+	);
 	await client.connect();
 	db = client.db('AmazingMernApp');
 }
