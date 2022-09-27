@@ -18,6 +18,7 @@ dotenv.config(); // see more details: https://medium.com/@zak786khan/env-variabl
 fse.ensureDirSync(path.join('public', 'uploaded-photos')); // to avoid naming difference (e.g. windows use back slash '\')
 
 let db;
+
 const app = express();
 app.set('view engine', 'ejs');
 app.set('views', './views');
@@ -59,9 +60,11 @@ app.get('/', async (req, res) => {
 					/>
 				))}
 			</div>
-			<p>
-				<a href="/admin">Login to manage the animal listings</a>
-			</p>
+			<h1>
+				<a href="/admin">
+					Login to manage the animal listings, the password is password.
+				</a>
+			</h1>
 		</div>
 	);
 	res.render('home', { generatedHTML });
