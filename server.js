@@ -173,4 +173,4 @@ async function start() {
 }
 start();
 
-app.listen(3000);
+app.listen(app.get('port'));
