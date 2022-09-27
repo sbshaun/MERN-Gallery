@@ -22,6 +22,7 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', './views');
 app.use(express.static('public'));
+app.set('port', process.env.PORT || 3000);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
