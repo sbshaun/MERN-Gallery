@@ -62,7 +62,7 @@ app.get('/', async (req, res) => {
 			</div>
 			<h1>
 				<a href="/admin">
-					Login to manage the animal listings, the password is password.
+					Login to manage the listings, the password is password.
 				</a>
 			</h1>
 		</div>
