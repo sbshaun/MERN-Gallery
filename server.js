@@ -28,62 +28,43 @@ app.set('port', process.env.PORT || 3000);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-function passwordProtected(req, res, next) {
-	res.set('WWW-Authenticate', "Basic realm='Our MERN  App'");
-	if (req.headers.authorization == 'Basic cGFzc3dvcmQuOnBhc3N3b3JkLg==') {
-		next();
-	} else {
-		console.log(req.headers.authorization);
-		res.status(401).send(
-			`<div style="text-align:center; height:100%">
-				<h1 style="line-height: 700px">Hint: the password is password.
-				</h1>
-			</div>`
-		);
-	}
-}
-
 app.get('/', async (req, res) => {
-	const allAnimals = await db.collection('animals').find().toArray();
+	list = await db?.collection('pictures').find().toArray();
 	const generatedHTML = ReactDOMServer.renderToString(
 		<div className="container">
-			{!allAnimals && <p>There are no animals yet.</p>}
+			{!list && <p>There are no element yet.</p>}
 			<div className="animal-grid mb-3">
-				{allAnimals.map(animal => (
-					<AnimalCard
-						key={animal._id}
-						name={animal.name}
-						species={animal.species}
-						photo={animal.photo}
-						id={animal._id}
-						readOnly={true}
-					/>
-				))}
+				{list &&
+					list.map(e => (
+						<AnimalCard
+							key={e._id}
+							name={e.name}
+							species={e.species}
+							photo={e.photo}
+							id={e._id}
+							readOnly={true}
+						/>
+					))}
 			</div>
 			<h1>
-				<a href="/admin">
-					Login to manage the listings, the username and password are both
-					password.
-				</a>
+				<a href="/admin">Login to manage the listings.</a>
 			</h1>
 		</div>
 	);
 	res.render('home', { generatedHTML });
 });
 
-app.use(passwordProtected);
-
 app.get('/admin', (req, res) => {
 	res.render('admin');
 });
 
-app.get('/api/animals', async (req, res) => {
-	const allAnimals = await db.collection('animals').find().toArray();
+app.get('/api/pictures', async (req, res) => {
+	const allAnimals = await db.collection('pictures').find().toArray();
 	res.json(allAnimals);
 });
 
 app.post(
-	'/create-animal',
+	'/create-picture',
 	upload.single('photo'),
 	cleanup,
 	async (req, res) => {
@@ -96,28 +77,28 @@ app.post(
 			req.cleanData.photo = photoFileName;
 		}
 
-		const info = await db.collection('animals').insertOne(req.cleanData);
+		const info = await db.collection('pictures').insertOne(req.cleanData);
 		const newAnimal = await db
-			.collection('animals')
+			.collection('pictures')
 			.findOne({ _id: new ObjectId(info.insertedId) });
 		res.send(newAnimal);
 	}
 );
 
-app.delete('/animal/:id', async (req, res) => {
+app.delete('/picture/:id', async (req, res) => {
 	if (typeof req.params.id != 'string') req.params.id = '';
 	const doc = await db
-		.collection('animals')
+		.collection('pictures')
 		.findOne({ _id: new ObjectId(req.params.id) });
 	if (doc.photo) {
 		fse.remove(path.join('public', 'uploaded-photos', doc.photo));
 	}
-	db.collection('animals').deleteOne({ _id: new ObjectId(req.params.id) });
+	db.collection('pictures').deleteOne({ _id: new ObjectId(req.params.id) });
 	res.send('Nice');
 });
 
 app.post(
-	'/update-animal',
+	'/update-picture',
 	upload.single('photo'),
 	cleanup,
 	async (req, res) => {
@@ -130,7 +111,7 @@ app.post(
 				.toFile(path.join('public', 'uploaded-photos', photoFileName));
 			req.cleanData.photo = photoFileName;
 			const info = await db
-				.collection('animals')
+				.collection('pictures')
 				.findOneAndUpdate(
 					{ _id: new ObjectId(req.body._id) },
 					{ $set: req.cleanData }
@@ -140,7 +121,7 @@ app.post(
 			}
 			res.send(photoFileName);
 		} else {
-			db.collection('animals').findOneAndUpdate(
+			db.collection('pictures').findOneAndUpdate(
 				{ _id: new ObjectId(req.body._id) },
 				{ $set: req.cleanData }
 			);
