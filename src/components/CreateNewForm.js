@@ -17,7 +17,7 @@ function CreateNewForm(props) {
 		setSpecies('');
 		setFile('');
 		CreatePhotoField.current.value = '';
-		const newPhoto = await Axios.post('/create-animal', data, {
+		const newPhoto = await Axios.post('/create-picture', data, {
 			headers: { 'Content-Type': 'multipart/form-data' },
 		});
 		props.setAnimals(prev => prev.concat([newPhoto.data]));
@@ -42,7 +42,7 @@ function CreateNewForm(props) {
 					value={name}
 					type="text"
 					className="form-control"
-					placeholder="Animal name"
+					placeholder="Picture name"
 				/>
 			</div>
 			<div className="mb-2">
@@ -55,7 +55,7 @@ function CreateNewForm(props) {
 				/>
 			</div>
 
-			<button className="btn btn-success">Create New Animal!</button>
+			<button className="btn btn-success">Create New Picture!</button>
 		</form>
 	);
 }

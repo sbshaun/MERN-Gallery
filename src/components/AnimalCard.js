@@ -25,7 +25,7 @@ function AnimalCard(props) {
 		data.append('_id', props.id);
 		data.append('name', draftName);
 		data.append('species', draftSpecies);
-		const newPhoto = await Axios.post('/update-animal', data, {
+		const newPhoto = await Axios.post('/update-picture', data, {
 			headers: { 'Content-Type': 'multipart/form-data' },
 		});
 		if (newPhoto.data) {
@@ -82,7 +82,7 @@ function AnimalCard(props) {
 								</button>{' '}
 								<button
 									onClick={async () => {
-										const test = Axios.delete(`/animal/${props.id}`);
+										const test = Axios.delete(`/picture/${props.id}`);
 										props.setAnimals(prev => {
 											return prev.filter(animal => {
 												return animal._id != props.id;

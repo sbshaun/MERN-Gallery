@@ -29,7 +29,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.get('/', async (req, res) => {
-	list = await db?.collection('animals').find().toArray();
+	list = await db?.collection('pictures').find().toArray();
 	const generatedHTML = ReactDOMServer.renderToString(
 		<div className="container">
 			{!list && <p>There are no element yet.</p>}
@@ -58,13 +58,13 @@ app.get('/admin', (req, res) => {
 	res.render('admin');
 });
 
-app.get('/api/animals', async (req, res) => {
-	const allAnimals = await db.collection('animals').find().toArray();
+app.get('/api/pictures', async (req, res) => {
+	const allAnimals = await db.collection('pictures').find().toArray();
 	res.json(allAnimals);
 });
 
 app.post(
-	'/create-animal',
+	'/create-picture',
 	upload.single('photo'),
 	cleanup,
 	async (req, res) => {
@@ -77,28 +77,28 @@ app.post(
 			req.cleanData.photo = photoFileName;
 		}
 
-		const info = await db.collection('animals').insertOne(req.cleanData);
+		const info = await db.collection('pictures').insertOne(req.cleanData);
 		const newAnimal = await db
-			.collection('animals')
+			.collection('pictures')
 			.findOne({ _id: new ObjectId(info.insertedId) });
 		res.send(newAnimal);
 	}
 );
 
-app.delete('/animal/:id', async (req, res) => {
+app.delete('/picture/:id', async (req, res) => {
 	if (typeof req.params.id != 'string') req.params.id = '';
 	const doc = await db
-		.collection('animals')
+		.collection('pictures')
 		.findOne({ _id: new ObjectId(req.params.id) });
 	if (doc.photo) {
 		fse.remove(path.join('public', 'uploaded-photos', doc.photo));
 	}
-	db.collection('animals').deleteOne({ _id: new ObjectId(req.params.id) });
+	db.collection('pictures').deleteOne({ _id: new ObjectId(req.params.id) });
 	res.send('Nice');
 });
 
 app.post(
-	'/update-animal',
+	'/update-picture',
 	upload.single('photo'),
 	cleanup,
 	async (req, res) => {
@@ -111,7 +111,7 @@ app.post(
 				.toFile(path.join('public', 'uploaded-photos', photoFileName));
 			req.cleanData.photo = photoFileName;
 			const info = await db
-				.collection('animals')
+				.collection('pictures')
 				.findOneAndUpdate(
 					{ _id: new ObjectId(req.body._id) },
 					{ $set: req.cleanData }
@@ -121,7 +121,7 @@ app.post(
 			}
 			res.send(photoFileName);
 		} else {
-			db.collection('animals').findOneAndUpdate(
+			db.collection('pictures').findOneAndUpdate(
 				{ _id: new ObjectId(req.body._id) },
 				{ $set: req.cleanData }
 			);

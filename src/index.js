@@ -12,7 +12,7 @@ function App() {
 
 	useEffect(() => {
 		async function go() {
-			const response = await Axios.get('/api/animals');
+			const response = await Axios.get('/api/pictures');
 			setAnimals(response.data);
 		}
 		go();
