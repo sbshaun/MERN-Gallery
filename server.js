@@ -44,27 +44,25 @@ function passwordProtected(req, res, next) {
 }
 
 app.get('/', async (req, res) => {
-	const allAnimals = await db.collection('animals').find().toArray();
+	list = await db?.collection('animals').find().toArray();
 	const generatedHTML = ReactDOMServer.renderToString(
 		<div className="container">
-			{!allAnimals && <p>There are no animals yet.</p>}
+			{!list && <p>There are no element yet.</p>}
 			<div className="animal-grid mb-3">
-				{allAnimals.map(animal => (
-					<AnimalCard
-						key={animal._id}
-						name={animal.name}
-						species={animal.species}
-						photo={animal.photo}
-						id={animal._id}
-						readOnly={true}
-					/>
-				))}
+				{list &&
+					list.map(e => (
+						<AnimalCard
+							key={e._id}
+							name={e.name}
+							species={e.species}
+							photo={e.photo}
+							id={e._id}
+							readOnly={true}
+						/>
+					))}
 			</div>
 			<h1>
-				<a href="/admin">
-					Login to manage the listings, the username and password are both
-					password.
-				</a>
+				<a href="/admin">Login to manage the listings.</a>
 			</h1>
 		</div>
 	);
