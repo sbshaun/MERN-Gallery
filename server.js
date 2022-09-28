@@ -28,21 +28,6 @@ app.set('port', process.env.PORT || 3000);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-function passwordProtected(req, res, next) {
-	res.set('WWW-Authenticate', "Basic realm='Our MERN  App'");
-	if (req.headers.authorization == 'Basic cGFzc3dvcmQuOnBhc3N3b3JkLg==') {
-		next();
-	} else {
-		console.log(req.headers.authorization);
-		res.status(401).send(
-			`<div style="text-align:center; height:100%">
-				<h1 style="line-height: 700px">Hint: the password is password.
-				</h1>
-			</div>`
-		);
-	}
-}
-
 app.get('/', async (req, res) => {
 	list = await db?.collection('animals').find().toArray();
 	const generatedHTML = ReactDOMServer.renderToString(
@@ -68,8 +53,6 @@ app.get('/', async (req, res) => {
 	);
 	res.render('home', { generatedHTML });
 });
-
-app.use(passwordProtected);
 
 app.get('/admin', (req, res) => {
 	res.render('admin');
